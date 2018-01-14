@@ -51,15 +51,12 @@ local function makeAnimatedComponent(toWrap)
 		local props = {}
 
 		for key, value in pairs(self.props) do
-			-- Skip any symbols, numbers, etc.
-			if typeof(key) == "string" then
-				-- If it's an AnimatedValue, use its current value.
-				if typeof(value) == "table" and value._class == AnimatedValue then
-					props[key] = value.Value
-				-- Otherwise, just forward it on.
-				else
-					props[key] = value
-				end
+			-- If it's an AnimatedValue, use its current value.
+			if typeof(value) == "table" and value._class == AnimatedValue then
+				props[key] = value.Value
+			-- Otherwise, just forward it on.
+			else
+				props[key] = value
 			end
 		end
 
