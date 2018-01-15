@@ -31,6 +31,7 @@ function Value:StartAnimation(toValue, tweenInfo)
 end
 
 function Value:FinishAnimation()
+	self.Done = true
 	self._finishAnimation:Fire()
 end
 

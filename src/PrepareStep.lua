@@ -18,6 +18,7 @@ end
 
 function PrepareStep:Start()
     self._value:Change(self._to)
+    self.Done = true
     self._finished:Fire()
 end
 
