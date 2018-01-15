@@ -48,6 +48,13 @@ local function makeAnimatedComponent(toWrap)
 						end)
 					end
 				end))
+
+				-- Handle value changes (PrepareStep)
+				table.insert(self._listeners, value.Changed:Connect(function(new)
+					if self._rbx then
+						self._rbx[key] = new
+					end
+				end))
 			end
 		end
 	end

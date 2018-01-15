@@ -10,13 +10,20 @@ function Value.new(initial)
 		_valueType = typeof(initial);
 		_startAnimation = Instance.new("BindableEvent");
 		_finishAnimation = Instance.new("BindableEvent");
+		_change = Instance.new("BindableEvent");
 		_class = Value;
 	}, Value)
 
 	self.AnimationStarted = self._startAnimation.Event
 	self.AnimationFinished = self._finishAnimation.Event
+	self.Changed = self._change.Event
 
 	return self
+end
+
+function Value:Change(newValue)
+	self.Value = newValue
+	self._change:Fire(newValue)
 end
 
 function Value:StartAnimation(toValue, tweenInfo)
