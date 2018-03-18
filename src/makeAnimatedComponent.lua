@@ -2,7 +2,7 @@
 
 local TweenService = game:GetService("TweenService")
 
-local Roact = require(game:GetService("ReplicatedStorage").Roact)
+local Roact = require(script.Parent.Parent.Roact)
 local AnimatedValue = require(script.Parent.AnimatedValue)
 
 local function makeAnimatedComponent(toWrap)
@@ -90,7 +90,7 @@ local function makeAnimatedComponent(toWrap)
 			end
 		end
 
-		return Roact.createElement(toWrap, props, self.props[Roact.Children])
+		return Roact.createElement(toWrap, props)
 	end
 
 	function wrappedComponent:_disconnectListeners()
