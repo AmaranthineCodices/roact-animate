@@ -3,6 +3,9 @@ local Signal = require(script.Parent.Signal)
 local AnimationSequence = {}
 AnimationSequence.__index = AnimationSequence
 
+--[[
+	Creates a new animation sequence.
+]]
 function AnimationSequence.new(animations, parallel)
 	local self = setmetatable({
 		_animations = animations,
@@ -13,6 +16,13 @@ function AnimationSequence.new(animations, parallel)
 	return self
 end
 
+--[[
+	Starts the animation sequence. All animations are run asynchronously; this
+	method does not yield!
+
+	If called when the animation sequence is already playing, this will halt
+	the current sequence and start over from the beginning.
+]]
 function AnimationSequence:Start()
 	-- Do all of this asynchronously.
 	spawn(function()
