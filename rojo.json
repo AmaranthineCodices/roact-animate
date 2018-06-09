@@ -1,0 +1,18 @@
+{
+  "name": "roact-animate",
+  "servePort": 8000,
+  "partitions": {
+    "src": {
+      "path": "src",
+      "target": "ReplicatedStorage.RoactAnimate"
+    },
+    "roact-lib": {
+      "path": "Roact/lib",
+      "target": "ReplicatedStorage.Roact"
+    },
+    "examples": {
+      "path": "examples",
+      "target": "StarterPlayer.StarterPlayerScripts.RoactAnimateExamples"
+    }
+  }
+}
