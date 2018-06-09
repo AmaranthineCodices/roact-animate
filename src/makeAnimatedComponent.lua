@@ -1,14 +1,22 @@
 -- Wraps a component to produce a new component that responds to animated values.
 
+local NON_PRIMITIVE_ERROR = "The component %q cannot be animated because it is not a primitive component."
+
 local TweenService = game:GetService("TweenService")
 
 local Roact = require(script.Parent.Parent.Roact)
 local AnimatedValue = require(script.Parent.AnimatedValue)
 
 local function makeAnimatedComponent(toWrap)
+	-- Non-primitive components cannot be animated because you can't use refs
+	-- with them.
+	if typeof(toWrap) ~= "string" then
+		error(NON_PRIMITIVE_ERROR:format(tostring(toWrap)), 2)
+	end
+
 	-- Component name is weird(ish) to avoid name collisions
 	-- This is automatically created, so w/e
-	local wrappedComponent = Roact.Component:extend("_animatedComponent:"..tostring(toWrap))
+	local wrappedComponent = Roact.Component:extend("_animatedComponent:"..toWrap)
 
 	function wrappedComponent:didMount()
 		-- Disconnect any currently registered listeners, just in case.
