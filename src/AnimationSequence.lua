@@ -1,16 +1,14 @@
+local Signal = require(script.Parent.Signal)
+
 local AnimationSequence = {}
 AnimationSequence.__index = AnimationSequence
 
 function AnimationSequence.new(animations, parallel)
 	local self = setmetatable({
-		_animations = animations;
-		_parallel = parallel;
-		_finished = Instance.new("BindableEvent");
+		_animations = animations,
+		_parallel = parallel,
+		AnimationFinished = Signal.new(),
 	}, AnimationSequence)
-
-	-- Fired when the animation finishes.
-	-- Not fired when the animation is canceled in any way.
-	self.AnimationFinished = self._finished.Event
 
 	return self
 end
@@ -18,47 +16,60 @@ end
 function AnimationSequence:Start()
 	-- Do all of this asynchronously.
 	spawn(function()
-		local allCompleted = Instance.new("BindableEvent")
-		local count = #self._animations
+		-- If this is a parallel animation set, we can run all of the
+		-- animations at the same time.
+		if self._parallel then
+			-- How many animations are currently running
+			local count = #self._animations
 
-		for _, animation in ipairs(self._animations) do
-			animation:Start()
-
-			-- If this isn't a parallel sequence, wait for the current animation to finish.
-			if not self._parallel then
-				if not animation.Done then
-					animation.AnimationFinished:Wait()
-				end
-
-				-- Perform bookkeeping here - no need for an event connection.
-				count = count - 1
-
-				if count <= 0 then
-					allCompleted:Fire()
-				end
-			-- If this is a parallel sequence we have to connect to AnimationFinished to
-			-- wait until all the animations are done executing.
-			else
+			for _, animation in ipairs(self._animations) do
 				local connection
 				connection = animation.AnimationFinished:Connect(function()
 					connection:Disconnect()
 					count = count - 1
 
+					-- If all of the animations are done, fire the AnimationFinished signal.
 					if count <= 0 then
-						allCompleted:Fire()
+						self.AnimationFinished:Fire()
 					end
 				end)
+
+				-- Once we've set the finished connection up, start the animation.
+				-- Starting after the connection is set up prevents issues where
+				-- the animations complete instantly (PrepareSteps).
+				animation:Start()
 			end
+		-- If this is a sequential animation set then we need to run things
+		-- one at a time - this is what _startSequential handles. Start at
+		-- the first animation.
+		else
+			self:_startSequential(1)
 		end
-
-		-- Wait for everyone to be finished
-		allCompleted.Event:Wait()
-		allCompleted:Destroy()
-
-		self.Done = true
-		-- Fire the finished event so the next one up knows we're done.
-		self._finished:Fire()
 	end)
+end
+
+--[[
+	Starts playing animations sequentially at a given index.
+]]
+function AnimationSequence:_startSequential(index)
+	local animation = self._animations[index]
+
+	local connection
+	connection = animation.AnimationFinished:Connect(function()
+		connection:Disconnect()
+
+		local newIndex = index + 1
+		-- If the index is greater than the length of the table, this was the
+		-- last animation - we're done!
+		if newIndex > #self._animations then
+			self.AnimationFinished:Fire()
+		-- Otherwise, go on to the next animation.
+		else
+			self:_startSequential(newIndex)
+		end
+	end)
+
+	animation:Start()
 end
 
 return AnimationSequence

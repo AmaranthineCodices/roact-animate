@@ -35,7 +35,7 @@ local function makeAnimatedComponent(toWrap)
 						-- Theoretically there are optimizations that could be done here, but
 						-- it's much simpler to just do one-tween-per-property.
 						-- Is optimizing this even relevant?
-						local tween = TweenService:Create(self._rbx, tweenInfo, { [key] = to; })
+						local tween = TweenService:Create(self._rbx, tweenInfo, { [key] = to, })
 						tween:Play()
 						_currentTween = tween
 
