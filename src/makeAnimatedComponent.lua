@@ -94,7 +94,11 @@ local function makeAnimatedComponent(toWrap)
 
 			-- forward the ref to the original component
 			if ref then
-				ref(rbx)
+				if typeof(ref) == "function" then
+					ref(rbx)
+				elseif typeof(ref) == "table" then
+					ref.current = rbx
+				end
 			end
 		end
 
