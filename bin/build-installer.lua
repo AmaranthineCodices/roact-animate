@@ -1,1 +1,0 @@
-os.exit(os.execute("rbxpacker --folder RoactAnimate --name RoactAnimate ./src > bin/installer.lua"))
