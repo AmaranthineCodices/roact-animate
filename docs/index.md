@@ -98,7 +98,7 @@ RoactAnimate.Sequence({
 })
 ```
 
-To start an animation, we call its `Start` method. We don't usually need to capture the animation in a variable, so we can just call the return value of `Sequence` directly:
+To start an animation, we call its `Start` method. We don't need to capture the animation in a variable, so we can just call the return value of `Sequence` directly:
 ```lua
 RoactAnimate.Sequence({
 	RoactAnimate(self._position, TweenInfo.new(0.125), self.props.Position - UDim2.new(0, 0, 0, 10)),
