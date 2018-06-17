@@ -1,0 +1,30 @@
+site_name: 'Roact-Animate'
+site_description: 'Documentation for Roact-Animate'
+site_url: 'https://animate.amaranthinecodices.me/'
+
+repo_name: 'AmaranthineCodices/roact-animate'
+repo_url: 'https://github.com/AmaranthineCodices/roact-animate'
+
+pages:
+  - Home: 'index.md'
+  - 'API Reference': 'api.md'
+
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/AmaranthineCodices/'
+    - type: 'twitter'
+      link: 'https://twitter.com/prolificlexicon'
+
+theme:
+  name: 'material'
+  logo:
+    icon: 'description'
+  palette:
+    primary: 'deep purple'
+    accent: 'cyan'
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
