@@ -23,7 +23,7 @@ end
 ]]
 function PrepareStep:Start()
     self._value:Change(self._to)
-    self.AnimationFinished:Fire()
+    self.AnimationFinished:Fire(true)
 end
 
 return PrepareStep

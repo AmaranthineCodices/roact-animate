@@ -3,7 +3,15 @@ local makeAnimatedComponent = require(script.makeAnimatedComponent)
 local RoactAnimate = {}
 
 -- Create animated variants of all the Roblox classes
-for _, class in ipairs({ "Frame", "ImageLabel", "ImageButton", "TextButton", "TextBox", "TextLabel", "ScrollingFrame" }) do
+for _, class in ipairs({
+		"Frame",
+		"ImageLabel",
+		"ImageButton",
+		"TextButton",
+		"TextBox",
+		"TextLabel",
+		"ScrollingFrame"
+	}) do
 	RoactAnimate[class] = makeAnimatedComponent(class)
 end
 

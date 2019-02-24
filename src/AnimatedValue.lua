@@ -16,6 +16,7 @@ function Value.new(initial)
 		AnimationFinished = Signal.new(),
 		Changed = Signal.new(),
 		_class = Value,
+		_isAnimating = false,
 	}, Value)
 
 	return self
@@ -34,14 +35,20 @@ end
 	Starts an animation over the property's value, using supplied tween properties.
 ]]
 function Value:StartAnimation(toValue, tweenInfo)
+	if self._isAnimating then
+		self:FinishAnimation(false)
+	end
+
+	self._isAnimating = true
 	self.AnimationStarted:Fire(toValue, tweenInfo)
 end
 
 --[[
 	Finishes an animation; called by animated components.
 ]]
-function Value:FinishAnimation()
-	self.AnimationFinished:Fire()
+function Value:FinishAnimation(wasCompleted)
+	self._isAnimating = false
+	self.AnimationFinished:Fire(wasCompleted)
 end
 
 return Value
