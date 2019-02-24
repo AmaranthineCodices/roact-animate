@@ -4,8 +4,7 @@ local NON_PRIMITIVE_ERROR = "The component %q cannot be animated because it is n
 
 local TweenService = game:GetService("TweenService")
 
-local RoactModule = game:GetService("ReplicatedStorage"):FindFirstChild("rbx-roact", true)
-local Roact = require(RoactModule.roact.lib)
+local Roact = require(script.Parent.Parent.Roact)
 local AnimatedValue = require(script.Parent.AnimatedValue)
 
 local function makeAnimatedComponent(toWrap)
