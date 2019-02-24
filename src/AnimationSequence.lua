@@ -33,14 +33,17 @@ function AnimationSequence:Start()
 			local count = #self._animations
 
 			for _, animation in ipairs(self._animations) do
+				local allCompleted = true
 				local connection
-				connection = animation.AnimationFinished:Connect(function()
+				connection = animation.AnimationFinished:Connect(function(wasCompleted)
 					connection:Disconnect()
 					count = count - 1
 
+					allCompleted = allCompleted and wasCompleted
+
 					-- If all of the animations are done, fire the AnimationFinished signal.
 					if count <= 0 then
-						self.AnimationFinished:Fire()
+						self.AnimationFinished:Fire(allCompleted)
 					end
 				end)
 
@@ -65,17 +68,21 @@ function AnimationSequence:_startSequential(index)
 	local animation = self._animations[index]
 
 	local connection
-	connection = animation.AnimationFinished:Connect(function()
+	connection = animation.AnimationFinished:Connect(function(wasCompleted)
 		connection:Disconnect()
 
-		local newIndex = index + 1
-		-- If the index is greater than the length of the table, this was the
-		-- last animation - we're done!
-		if newIndex > #self._animations then
-			self.AnimationFinished:Fire()
-		-- Otherwise, go on to the next animation.
+		if wasCompleted then
+			local newIndex = index + 1
+			-- If the index is greater than the length of the table, this was the
+			-- last animation - we're done!
+			if newIndex > #self._animations then
+				self.AnimationFinished:Fire(true)
+			-- Otherwise, go on to the next animation.
+			else
+				self:_startSequential(newIndex)
+			end
 		else
-			self:_startSequential(newIndex)
+			self.AnimationFinished:Fire(false)
 		end
 	end)
 

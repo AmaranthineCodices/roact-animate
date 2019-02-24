@@ -4,7 +4,8 @@ local NON_PRIMITIVE_ERROR = "The component %q cannot be animated because it is n
 
 local TweenService = game:GetService("TweenService")
 
-local Roact = require(script.Parent.Parent.Roact)
+local RoactModule = game:GetService("ReplicatedStorage"):FindFirstChild("rbx-roact", true)
+local Roact = require(RoactModule.roact.lib)
 local AnimatedValue = require(script.Parent.AnimatedValue)
 
 local function makeAnimatedComponent(toWrap)
@@ -48,12 +49,17 @@ local function makeAnimatedComponent(toWrap)
 						_currentTween = tween
 
 						-- For feedback - this is used for sequential animations
-						_currentTween.Completed:Connect(function(status)
-							-- Only "finish" the animation if it wasn't canceled.
-							if status == Enum.PlaybackState.Completed then
-								value:FinishAnimation()
-							end
-						end)
+						local finishStatus = _currentTween.Completed:Wait()
+						if finishStatus == Enum.PlaybackState.Completed then
+							-- Finish animation marked as "completed"
+							value:FinishAnimation(true)
+						else
+							-- Finish animation marked as "overridden"
+							value:FinishAnimation(false)
+						end
+					else
+						-- Close animation immediately
+						value:FinishAnimation(false)
 					end
 				end))
 
